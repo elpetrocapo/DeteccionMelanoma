@@ -1,0 +1,16 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+*.pyc
+.idea
+*.exp
+*.lib
+*.dblite
+build/
+*.pyd
+Images/
+*.xml
+.DS_Store
+*.vcxproj
+*.txt
+*.csv
+*classifier*
+.vscode
