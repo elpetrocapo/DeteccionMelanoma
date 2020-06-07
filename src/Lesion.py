@@ -4,19 +4,20 @@ Created on Fri Aug 18 12:28:59 2017
 
 @author: ukalwa
 """
-import json
-import os
 # Built-in imports
 import sys
+import os
+import json
 from time import time
 
 # third-party imports
 import cv2
 import numpy as np
 
-from src import color_contour
-from src import features
 # custom imports
+import features
+from utilities import extract_largest_contour
+import color_contour
 try:
     import active_contour
 except ImportError:
@@ -169,12 +170,7 @@ class Lesion:
                                                    self.iter_list,
                                                    self.energy_list,
                                                    self.gaussian_list)
-            cv2.findContours()
-            self.value_threshold = np.uint8(cv2.mean(self.hsv_image)[2]) \
-                                   - 30
-            contours, hierarchy = cv2.findContours(self.value_threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-            ret_val = contours
+            ret_val = extract_largest_contour(self.contour_mask)
             if len(ret_val) == 0:
                 print("error")
                 return
