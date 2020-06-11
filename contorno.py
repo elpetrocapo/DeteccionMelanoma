@@ -26,6 +26,7 @@ class Lesion:
         self.image = None
         self.segmented_img = None
         self.hsv_image = None
+        self.blackwhite_image=None
         self.contour_binary = None
         self.contour_image = None
         self.contour_mask = None
@@ -111,7 +112,7 @@ class Lesion:
             #         self.image[:, :, i],
             #         cv2.MORPH_CLOSE, kernel)
             self.hsv_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
-
+            self.blackwhite_image=cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
             self.contour_image = np.copy(self.original_image)
             self.isImageValid = True
             # Mednode dataset related params
@@ -129,22 +130,26 @@ class Lesion:
             return
 
 
-img = cv2.imread('C:/Users/Leo/PycharmProjects/CONTORNO/lunar2.jpg')
+img = cv2.imread('D:/Users/petrofac/PycharmProjects/DetectarCaracteristicasMelanomaMasSimple/DeteccionMelanoma/melanoma.jpg')
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-lesion = Lesion('C:/Users/Leo/PycharmProjects/CONTORNO/lunar2.jpg')
+lesion = Lesion('D:/Users/petrofac/PycharmProjects/DetectarCaracteristicasMelanomaMasSimple/DeteccionMelanoma/melanoma.jpg')
 if lesion.preprocess():
     print("PAQUINJICO")
 else:
     print("EL PECOKPO")
-cv2.imshow('FOTITO', lesion.hsv_image)
+cv2.imshow('FOTITO', lesion.blackwhite_image)
 cv2.waitKey(0)
-retval, thresh = cv2.threshold(lesion.hsv_image, 127, 255, 0)
+
+retval, thresh = cv2.threshold(lesion.blackwhite_image, 127, 255, cv2.CV_THRESH_BINARY)
 #retval, thresh = cv2.threshold(gray_img, 127, 255, 0)
 img_contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 #cv2.drawContours(img, img_contours, -1, (0, 255, 0))
 
-cv2.drawContours(lesion.hsv_image, img_contours, -1, (0, 255, 0))
-cv2.imshow('Image Contours', lesion.hsv_image)
+cv2.drawContours(lesion.image, img_contours, -1, (0, 255, 0))
+cv2.imshow('Image Contours', lesion.image)
+
+
+
 cv2.waitKey(0)
 
 
